@@ -22,7 +22,7 @@ full_danmuji = pjoin(dir_danmuji, "danmuji.exe")
 dir_afl = pjoin(dir_thirdparty, "AFL")
 dir_temp = pjoin(dir_root, "run-temp") # a temp dir to store runtime-generated junk files)
 dir_dafl = pjoin(dir_thirdparty, "DAFL")
-dir_aflgo = pjoin(dir_thirdparty, "AFLGo")
+dir_aflgo = pjoin(dir_thirdparty, "aflgo")
 
 dir_afl_raw_input = ""
 dir_afl_raw_output = ""

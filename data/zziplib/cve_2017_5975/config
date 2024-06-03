@@ -1,10 +1,15 @@
 binary=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/source/<parameter-dir>/bins/unzzipcat-mem
+binary-dir=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/pacfix/bins/unzzipcat-mem
 cmd=<exploit>
 exploit=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/exploit
 fix-location=memdisk.c:180
 crash-location=memdisk.c:182
 runtime-dir=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/runtime
+afl-skip-deterministic=false
 source-dir=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/source
+instrument-dir=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/pacfix
 fix-file-path=zzip/memdisk.c
 fix-line=180
-build-cmd=make clean && make CFLAGS="-static -fsanitize=address -g" CXXFLAGS="-static -fsanitize=address -g" -j10
+dfg=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/sparrow-out/bug/slice_dfg.txt
+build-cmd=/home/yuntong/vulnfix/data/zziplib/cve_2017_5975/build.sh
+fuzzer=/home/yuntong/vulnfix/thirdparty/DAFL/

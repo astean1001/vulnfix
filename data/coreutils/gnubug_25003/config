@@ -1,11 +1,16 @@
 binary=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/source/src/split
+binary-dir=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/pacfix/src/split
 cmd=
 exploit=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/exploit
 fix-location=split.c:988
 crash-location=split.c:988
 runtime-dir=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/runtime
+afl-skip-deterministic=false
 input-from-stdin=true
 source-dir=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/source
+instrument-dir=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/pacfix
 fix-file-path=src/split.c
 fix-line=986
-build-cmd=make clean && make CFLAGS="-Wno-error -fsanitize=address -fsanitize=undefined -g" CXXFLAGS="-Wno-error -fsanitize=address -fsanitize=undefined -g" -j10
+build-cmd=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/build.sh
+dfg=/home/yuntong/vulnfix/data/coreutils/gnubug_25003/sparrow-out/bug/slice_dfg.txt
+fuzzer=/home/yuntong/vulnfix/thirdparty/DAFL/

@@ -1,10 +1,15 @@
-binary=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/source/tools/tiffcp
+binary=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/tiffcp
+binary-dir=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/pacfix/tools/tiffcp
 cmd=-i <exploit> out.tmp
 exploit=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/exploit
 fix-location=tif_dirwrite.c:994
 crash-location=tif_dirwrite.c:994
 runtime-dir=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/runtime
+afl-skip-deterministic=false
 source-dir=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/source
 fix-file-path=libtiff/tif_dirwrite.c
 fix-line=994
-build-cmd=make clean && make CFLAGS="-fsanitize=float-cast-overflow,address -static -ggdb" CXXFLAGS="-fsanitize=float-cast-overflow,address -static -ggdb" LDFLAGS="-fsanitize=float-cast-overflow,address" -j10
+build-cmd=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/build.sh
+instrument-dir=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/pacfix
+dfg=/home/yuntong/vulnfix/data/libtiff/cve_2017_7600/sparrow-out/bug/slice_dfg.txt
+fuzzer=/home/yuntong/vulnfix/thirdparty/DAFL/

@@ -1,10 +1,15 @@
 binary=/home/yuntong/vulnfix/data/libming/cve_2016_9264/source/util/listmp3
+binary-dir=/home/yuntong/vulnfix/data/libming/cve_2016_9264/pacfix/util/listmp3
 cmd=<exploit>
 exploit=/home/yuntong/vulnfix/data/libming/cve_2016_9264/exploit
 fix-location=listmp3.c:124
 crash-location=listmp3.c:128
 runtime-dir=/home/yuntong/vulnfix/data/libming/cve_2016_9264/runtime
+instrument-dir=/home/yuntong/vulnfix/data/libming/cve_2016_9264/pacfix
+afl-skip-deterministic=false
 source-dir=/home/yuntong/vulnfix/data/libming/cve_2016_9264/source
 fix-file-path=util/listmp3.c
 fix-line=124
-build-cmd=make clean && make CFLAGS="-static -fsanitize=address -fsanitize=undefined -g" CXXFLAGS="-static -fsanitize=address -fsanitize=undefined -g"
+build-cmd=/home/yuntong/vulnfix/data/libming/cve_2016_9264/build.sh
+dfg=/home/yuntong/vulnfix/data/libming/cve_2016_9264/sparrow-out/bug/slice_dfg.txt
+fuzzer=/home/yuntong/vulnfix/thirdparty/DAFL/

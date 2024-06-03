@@ -1,11 +1,16 @@
 binary=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/source/djpeg
+binary-dir=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/pacfix/djpeg
 cmd=-crop 1x1+16+16 -onepass -dither ordered -dct float -colors 8 -targa -grayscale -outfile out.tmp <exploit>
 exploit=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/exploit
 fix-location=jdpostct.c:134
 crash-location=jquant1.c:536
 runtime-dir=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/runtime
+instrument-dir=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/pacfix
+afl-skip-deterministic=false
 source-dir=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/source
 afl-skip-deterministic=false
 fix-file-path=jdpostct.c
 fix-line=134
-build-cmd=make clean && make CFLAGS="-static -fsanitize=address -fsanitize=undefined -g" CXXFLAGS="-static -fsanitize=address -fsanitize=undefined -g" -j10
+build-cmd=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/build.sh
+dfg=/home/yuntong/vulnfix/data/libjpeg/cve_2017_15232/sparrow-out/bug/slice_dfg.txt
+fuzzer=/home/yuntong/vulnfix/thirdparty/DAFL/

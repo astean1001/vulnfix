@@ -1,10 +1,15 @@
 binary=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/source/xmllint
+binary-dir=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/pacfix/xmllint
 cmd=--recover <exploit>
 exploit=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/exploit
-fix-location=valid.c:1181
-crash-location=valid.c:1181
+fix-location=valid.c:1184
+crash-location=valid.c:1184
 runtime-dir=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/runtime
 source-dir=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/source
+instrument-dir=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/pacfix
+afl-skip-deterministic=false
 fix-file-path=valid.c
-fix-line=1181
-build-cmd=make clean && make CFLAGS="-static -fsanitize=address -g" CXXFLAGS="-static -fsanitize=address -g" LDFLAGS="-fsanitize=address" -j10
+fix-line=1184
+build-cmd=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/build.sh
+dfg=/home/yuntong/vulnfix/data/libxml2/cve_2017_5969/sparrow-out/bug/slice_dfg.txt
+fuzzer=/home/yuntong/vulnfix/thirdparty/DAFL/

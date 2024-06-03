@@ -59,3 +59,72 @@ ASAN_OPTIONS=detect_leaks=0 make CFLAGS="-ldl -lutil -fsanitize=address -ggdb -W
 
 cd ..
 cp ./raw_build/binutils/nm-new ./nm-new
+
+
+# aflgo
+export AFLGO=/home/yuntong/vulnfix/thirdparty/aflgo
+rm -rf aflgo_build && mkdir aflgo_build
+pushd aflgo_build
+  # first build
+  mkdir temp
+  TMP_DIR=$PWD/temp
+  echo "dwarf2.c:2441" > $TMP_DIR/BBtargets.txt
+  ADDITIONAL_FLAGS="-targets=$TMP_DIR/BBtargets.txt -outdir=$TMP_DIR -flto -fuse-ld=gold -Wl,-plugin-opt=save-temps"
+  AFL_PATH=$AFLGO CC=$AFLGO/afl-clang-fast CXX=$AFLGO/afl-clang-fast++ ../source/configure --disable-shared --disable-gdb --disable-libdecnumber --disable-readline --disable-sim LIBS='-ldl -lutil'
+  AFL_PATH=$AFLGO CC=$AFLGO/afl-clang-fast CXX=$AFLGO/afl-clang-fast++ make CFLAGS="$ADDITIONAL_FLAGS -ldl -lutil -fsanitize=address -ggdb -Wno-error" CXXFLAGS="$ADDITIONAL_FLAGS -ldl -lutil -fsanitize=address -ggdb -Wno-error" -j10
+  # generate distance
+  cat $TMP_DIR/BBnames.txt | rev | cut -d: -f2- | rev | sort | uniq > $TMP_DIR/BBnames2.txt \
+            && mv $TMP_DIR/BBnames2.txt $TMP_DIR/BBnames.txt
+  cat $TMP_DIR/BBcalls.txt | sort | uniq > $TMP_DIR/BBcalls2.txt \
+            && mv $TMP_DIR/BBcalls2.txt $TMP_DIR/BBcalls.txt
+  $AFLGO/scripts/genDistance.sh $PWD $TMP_DIR nm-new
+  # second build
+  make clean
+  ADDITIONAL_FLAGS="-distance=$TMP_DIR/distance.cfg.txt"
+  # AFL_PATH=$AFLGO CC=$AFLGO/afl-clang-fast CXX=$AFLGO/afl-clang-fast++ ../source/configure  --disable-shared --disable-gdb --disable-libdecnumber --disable-readline --disable-sim LIBS='-ldl -lutil'
+  AFL_PATH=$AFLGO CC=$AFLGO/afl-clang-fast CXX=$AFLGO/afl-clang-fast++ make CFLAGS="$ADDITIONAL_FLAGS -ldl -lutil -fsanitize=address -ggdb -Wno-error" CXXFLAGS="$ADDITIONAL_FLAGS -ldl -lutil -fsanitize=address -ggdb -Wno-error" -j10
+popd
+
+# beacon
+rm -rf beacon_build && mkdir beacon_build
+BEACON_DIR=/home/yuntong/vulnfix/thirdparty/Beacon
+pushd beacon_build
+  OLD_PATH=$PATH
+  export PATH=$BEACON_DIR/llvm4/bin:$PATH
+  CC=clang CXX=clang++ ../source/configure  --disable-shared --disable-gdb --disable-libdecnumber --disable-readline --disable-sim LIBS='-ldl -lutil'
+  ADDITIONAL_FLAGS="-flto -fuse-ld=gold -Wl,-plugin-opt=save-temps"
+  make CFLAGS="$ADDITIONAL_FLAGS -ldl -lutil -fsanitize=address -ggdb -Wno-error" CXXFLAGS="$ADDITIONAL_FLAGS -ldl -lutil -fsanitize=address -ggdb -Wno-error" -j10
+  mkdir temp
+  echo "dwarf2.c:2441" > temp/target.txt
+  cp binutils/nm-new.0.0.preopt.bc temp/nm-new.bc
+  pushd temp
+    $BEACON_DIR/precondInfer nm-new.bc --target-file=target.txt --join-bound=5 > precond.log 2>&1
+    $BEACON_DIR/Ins -output=nm-new.bc -byte -blocks=bbreaches__benchmark_target_line -afl -log=ins.log -load=range_res.txt ins.bc
+  popd
+  export PATH=$OLD_PATH
+popd
+
+# windranger
+rm -rf windranger_build && mkdir windranger_build
+WINDRANGER_DIR=/home/yuntong/vulnfix/thirdparty/WindRanger
+pushd windranger_build
+  bin_name=nm-new
+  OLD_PATH=$PATH
+  export PATH=/usr/lib/llvm-10/bin:/root/go/bin:$PATH
+  CC=gclang CXX=gclang++ ../source/configure  --disable-shared --disable-gdb --disable-libdecnumber --disable-readline --disable-sim LIBS='-ldl -lutil'
+  make CFLAGS="-ldl -lutil -fsanitize=address -ggdb -Wno-error" CXXFLAGS="-ldl -lutil -fsanitize=address -ggdb -Wno-error" -j 32
+  get-bc binutils/$bin_name
+  mkdir temp
+  echo "dwarf2.c:2441" > temp/target.txt
+  TARGET_FILE=$PWD/temp/target.txt
+  cp binutils/$bin_name.bc temp
+  pushd temp
+    $WINDRANGER_DIR/windranger/instrument/bin/cbi --targets=$TARGET_FILE ./$bin_name.bc
+    $WINDRANGER_DIR/windranger/fuzz/afl-clang-fast -ldl -lutil -fsanitize=address -ggdb -Wno-error ./$bin_name.ci.bc -o $bin_name.windranger
+    # run command: $WINDRANGER_DIR/windranger/fuzz/afl-fuzz -m none -d -i seed -o out -C -- ./tiffcrop.windranger @@ /tmp/out.tif
+    # you need to copy distance.txt, targets.txt, condition_info.txt if you want to run this in other directory
+  popd
+  export PATH=$OLD_PATH
+popd
+
+cp aflgo_build/binutils/nm-new ./nm-new.aflgo

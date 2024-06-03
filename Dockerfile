@@ -25,7 +25,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y python3.8
 RUN DEBIAN_FRONTEND=noninteractive apt install -y git vim python3-pip gdb \
     default-jdk m4 xxd clang flex bison autopoint gperf texinfo libjpeg-dev \
     nasm libass-dev libmp3lame-dev dh-autoreconf unzip libopus-dev \
-    libtheora-dev libvorbis-dev rsync python3-dev python-dev opam
+    libtheora-dev libvorbis-dev rsync python3-dev python-dev opam libboost-all-dev
 
 RUN DEBIAN_FRONTEND=noninteractive apt install -y clang-10
 
@@ -48,7 +48,7 @@ RUN git submodule update
 WORKDIR /home/yuntong/vulnfix/
 RUN python3.8 -m pip install -r requirements.txt
 # required for building cvc5 (default python3 is 3.6)
-RUN python3 -m pip install toml pyparsing
+RUN python3 -m pip install toml pyparsing networkx pydot pydotplus
 # NOTE: this might be slow
 RUN ./build.sh
 
@@ -91,6 +91,8 @@ RUN rm /usr/lib/libLTO.so
 RUN rm /usr/lib/LLVMgold.so
 RUN ln -s /usr/lib/llvm-12/lib/libLTO.so /usr/lib/libLTO.so
 RUN ln -s /usr/lib/llvm-12/lib/LLVMgold.so /usr/lib/LLVMgold.so
+RUN ln -s /usr/lib/llvm-12/lib/libLTO.so /usr/lib/bfd-plugins/libLTO.so
+RUN ln -s /usr/lib/llvm-12/lib/LLVMgold.so /usr/lib/bfd-plugins/LLVMgold.so
 
 # fix the llvm include path
 RUN rm -rf /usr/include/llvm
@@ -107,5 +109,6 @@ WORKDIR /home/yuntong/vulnfix/thirdparty/sparrow
 RUN ./build.sh
 
 ENV PATH="/home/yuntong/vulnfix/bin:${PATH}"
+ENV AFLGO="/home/yuntong/vulnfix/thirdparty/aflgo"
 
 ENTRYPOINT /bin/bash

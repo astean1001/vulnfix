@@ -27,3 +27,12 @@
 [submodule "thirdparty/sparrow"]
 	path = thirdparty/sparrow
 	url = https://github.com/prosyslab/sparrow.git
+[submodule "thirdparty/aflgo"]
+	path = thirdparty/aflgo
+	url = https://github.com/aflgo/aflgo.git
+[submodule "thirdparty/WindRanger"]
+	path = thirdparty/WindRanger
+	url = https://github.com/hsh814/WindRanger.git
+[submodule "thirdparty/Beacon"]
+	path = thirdparty/Beacon
+	url = https://github.com/hsh814/Beacon.git

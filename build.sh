@@ -97,3 +97,26 @@ echo -e "${YELLOW}$0${OFF}: other libraries has been built!"
 popd
 
 echo -e "${YELLOW}$0${OFF}: build finished."
+
+
+# STEP (7): build AFLGo
+pushd $AFLGO
+    make clean all
+    pushd llvm_mode
+        make clean all
+    popd
+    pushd distance_calculator
+        cmake .
+        cmake --build .
+    popd
+popd
+
+# STEP (8): build WindRanger
+pushd $ROOT/thirdparty/WindRanger
+    ./build.sh
+popd
+
+# STEP (9): build Beacon
+pushd $ROOT/thirdparty/Beacon
+    ./setup.sh
+popd

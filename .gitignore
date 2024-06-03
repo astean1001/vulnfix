@@ -2,6 +2,7 @@
 *__pycache__/
 *.pyc
 .DS_Store
+.cache/
 
 # build files
 *.so
@@ -21,6 +22,10 @@ data/*/*/cvcback-runtime/
 data/*/*/conc-runtime/
 data/*/*/afl-runtime/
 data/*/*/source/
+data/*/*/dafl-runtime/
+data/*/*/pacfix/
+data/*/*/repair-out/
+runtime-*
 out.tmp
 *.dtrace
 *.decls
@@ -33,8 +38,11 @@ data/coreutils/gnubug_26545/000*
 xaaa.tif
 exploit.eps
 
+tmp/
+
 # vscode
 .vscode/
+.idea/
 
 # build binaries
 cjpeg
@@ -69,5 +77,11 @@ data/*/*/sparrow-out
 data/*/*/danmuji-runtime
 data/*/*/vulnfix_source
 data/*/*/raw_build
+data/*/*/aflgo_build
+data/*/*/beacon_build
+data/*/*/windranger_build
 data/*/*/*.instrumented
+data/*/*/*.aflgo
+data/*/*/*.beacon
+data/*/*/*.windranger
 data/*/*/*-sparrow

@@ -20,7 +20,7 @@
 	ignore = dirty
 [submodule "thirdparty/DAFL"]
 	path = thirdparty/DAFL
-	url = https://github.com/pslhy/DAFL.git
+	url = https://github.com/hsh814/DAFL.git
 [submodule "thirdparty/smake"]
 	path = thirdparty/smake
 	url = https://github.com/prosyslab/smake.git
